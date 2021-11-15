@@ -39,6 +39,27 @@ def is_valid_name(name):
     return re.match(r'^[a-zA-Z.-]+$', name)
 
 
+def stop_day_order(client : Client, chat_id):
+    week = find_week()
+    time_of_this_day = datetime.datetime.now()
+    how_much_day_spend = (time_of_this_day - datetime.datetime.strptime(week.get("date"))).days
+    if how_much_day_spend == 0:
+        how_much_day_spend = 1
+
+    if week.get("week_day") + how_much_day_spend > 7:
+        list_of_order_of_person_in_day = find_order_of_one_day_of_one_week_all(week.get("week_number"),
+                                                                               week.get("week_day"))
+
+        msg = list_of_oder(list_of_order_of_person_in_day)
+
+        client.send_message(chat_id, msg)
+
+        update_week_number(int(week.get("week_number")) + 1)
+        update_week_day(week.get("week_day") + how_much_day_spend % 7 + 1)
+    else:
+        update_week_day(int(week.get("week_day")) + 1)
+
+
 def step_two_start_for_not_exist(client: Client, chat_id, first_last_name, user_name,
                                  name_that_want_to_be_in_data_base):
     name_validity = True if is_valid_name(name_that_want_to_be_in_data_base) else False
@@ -139,6 +160,7 @@ def bot_do_job(bot: Client):
                     client.send_message(chat_id, MessageSend.update_food_successful)
 
                 elif type_user == "Admin" and message.text == Keyboards.create_menu_for_next_day:
+                    stop_day_order(client, chat_id)
                     all_food_in_list_of_dic = find_all_food()
                     xb = see_food_menue_for_order(all_food_in_list_of_dic)
                     client.send_message(chat_id, MessageSend.add_name_of_your_food, reply_markup=xb)
@@ -154,25 +176,25 @@ def bot_do_job(bot: Client):
 
 
                 elif type_user == "Admin" and message.text == Keyboards.stop_next_day_food_request:
-
-                    week = find_week()
-                    time_of_this_day = datetime.datetime.now()
-                    how_much_day_spend = (time_of_this_day - week.get("date")).days
-                    if how_much_day_spend == 0:
-                        how_much_day_spend = 1
-
-                    if week.get("week_day") + how_much_day_spend > 7:
-                        list_of_order_of_person_in_day = find_order_of_one_day_of_one_week_all(week.get("week_number"),
-                                                                                               week.get("week_day"))
-
-                        msg = list_of_oder(list_of_order_of_person_in_day)
-
-                        client.send_message(chat_id, msg)
-
-                        update_week_number(int(week.get("week_number")) + 1)
-                        update_week_day(week.get("week_day") + how_much_day_spend % 7 + 1)
-                    else:
-                        update_week_day(int(week.get("week_day")) + 1)
+                    stop_day_order(client, chat_id)
+                    # week = find_week()
+                    # time_of_this_day = datetime.datetime.now()
+                    # how_much_day_spend = (time_of_this_day - datetime.datetime.strptime(week.get("date"))).days
+                    # if how_much_day_spend == 0:
+                    #     how_much_day_spend = 1
+                    #
+                    # if week.get("week_day") + how_much_day_spend > 7:
+                    #     list_of_order_of_person_in_day = find_order_of_one_day_of_one_week_all(week.get("week_number"),
+                    #                                                                            week.get("week_day"))
+                    #
+                    #     msg = list_of_oder(list_of_order_of_person_in_day)
+                    #
+                    #     client.send_message(chat_id, msg)
+                    #
+                    #     update_week_number(int(week.get("week_number")) + 1)
+                    #     update_week_day(week.get("week_day") + how_much_day_spend % 7 + 1)
+                    # else:
+                    #     update_week_day(int(week.get("week_day")) + 1)
 
 
                 elif type_user == "Admin" and message.text == Keyboards.person_dept:

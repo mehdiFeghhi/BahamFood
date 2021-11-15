@@ -154,21 +154,21 @@ def find_order_of_one_day_of_one_week_all(week_number, week_day):
 
 def add_week(week_number, week_day):
     weeks = mydb["Week"]
-    mydict = {"i": 1, "week_number": week_number, "week_day": week_day, "date": datetime.datetime.now()}
+    mydict = {"i": 1, "week_number": week_number, "week_day": week_day, "date": str(datetime.datetime.now())}
     weeks.insert_one(mydict)
 
 
 def update_week_day(week_day):
     weeks = mydb["Week"]
     myquery = {"i": 1}
-    newvalue = {"$set": {"week_day": week_day, "date": datetime.datetime.now()}}
+    newvalue = {"$set": {"week_day": week_day, "date": str(datetime.datetime.now())}}
     weeks.update_one(myquery, newvalue)
 
 
 def update_week_number(week_number):
     weeks = mydb["Week"]
     myquery = {"i": 1}
-    newvalue = {"$set": {"week_number": week_number, "date": datetime.datetime.now()}}
+    newvalue = {"$set": {"week_number": week_number, "date": str(datetime.datetime.now())}}
     weeks.update_one(myquery, newvalue)
 
 
