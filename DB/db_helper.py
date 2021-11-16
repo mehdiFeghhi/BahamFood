@@ -33,7 +33,7 @@ def get_csv_of_user(file_name):
 
 
 def use_helper():
-    f = open("DB/help.txt", "r")
+    f = open("help.txt", "r")
     print(f.read())
 
 
