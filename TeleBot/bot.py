@@ -11,6 +11,8 @@ from DB.Model_Impletation import find_user_by_id, add_new_user, update_user_step
     update_user_dept, find_week, add_order, update_week_number, update_week_day, find_order_of_one_day_of_one_week_all, \
     find_user_by_name
 
+is_food_today_run = False
+
 
 def find_information_of_massage_sender(message: Message):
     chat_id = message.from_user.id
@@ -40,24 +42,29 @@ def is_valid_name(name):
 
 
 def stop_day_order(client: Client, chat_id):
+    global is_food_today_run
+
     week = find_week()
     time_of_this_day = datetime.datetime.now()
     how_much_day_spend = (time_of_this_day - datetime.datetime.strptime(week.get("date"), '%Y-%m-%d %H:%M:%S.%f')).days
-    if how_much_day_spend == 0:
+    print("how_much_day_spend "+str(how_much_day_spend))
+    if how_much_day_spend == 0 and is_food_today_run:
         how_much_day_spend = 1
 
-    if week.get("week_day") + how_much_day_spend > 7:
-        list_of_order_of_person_in_day = find_order_of_one_day_of_one_week_all(week.get("week_number"),
-                                                                               week.get("week_day"))
-
-        msg = list_of_oder(list_of_order_of_person_in_day)
-
-        client.send_message(chat_id, msg)
+    if int(week.get("week_day")) + how_much_day_spend > 7 :
 
         update_week_number(int(week.get("week_number")) + 1)
-        update_week_day(week.get("week_day") + how_much_day_spend % 7 + 1)
-    else:
-        update_week_day(int(week.get("week_day")) + 1)
+        update_week_day((int(week.get("week_day")) + how_much_day_spend) % 7 + 1)
+    elif how_much_day_spend > 0:
+        update_week_day(int(week.get("week_day")) + how_much_day_spend)
+
+    list_of_order_of_person_in_day = find_order_of_one_day_of_one_week_all(str(week.get("week_number")),
+                                                                               str(week.get("week_day")))
+    print(week.get("week_number"))
+    print(week.get("week_day"))
+    msg = list_of_oder(list_of_order_of_person_in_day)
+    client.send_message(chat_id, msg)
+    is_food_today_run = False
 
 
 def step_two_start_for_not_exist(client: Client, chat_id, first_last_name, user_name,
@@ -93,7 +100,6 @@ def make_message_for_orders(orders):
 def bot_do_job(bot: Client):
     # week_of_today = 2
     # number_of_week = 1
-
     @bot.on_message()
     def handle_message(client: Client, message: Message):
         if message.text is not None:
@@ -160,16 +166,19 @@ def bot_do_job(bot: Client):
                     client.send_message(chat_id, MessageSend.update_food_successful)
 
                 elif type_user == "Admin" and message.text == Keyboards.create_menu_for_next_day:
+                    global is_food_today_run
                     stop_day_order(client, chat_id)
                     all_food_in_list_of_dic = find_all_food()
                     xb = see_food_menue_for_order(all_food_in_list_of_dic)
+                    is_food_today_run = True
                     client.send_message(chat_id, MessageSend.add_name_of_your_food, reply_markup=xb)
 
                 elif type_user == "Admin" and message.text == Keyboards.see_who_one_wants_food:
                     week = find_week()
-                    list_of_order_of_person_in_day = find_order_of_one_day_of_one_week_all(week.get("week_number"),
-                                                                                           week.get("week_day"))
-
+                    list_of_order_of_person_in_day = find_order_of_one_day_of_one_week_all(str(week.get("week_number")),
+                                                                                           str(week.get("week_day")))
+                    # print(week.get("week_number"))
+                    # print(week.get("week_day"))
                     msg = list_of_oder(list_of_order_of_person_in_day)
 
                     client.send_message(chat_id, msg)
@@ -261,9 +270,10 @@ def bot_do_job(bot: Client):
                 client.send_message(user.get("user_id"), MessageSend.next_day_food,
                                     reply_markup=see_food(food, number_of_week, week_of_today))
         elif callback_query_list[0] == 'Order_For_Next_Day_Accept':
-            date_today = datetime.time
+            date_today = str(datetime.datetime.now())
             week = find_week()
-            if week.get("week_number") == int(callback_query_list[3]) and week.get("week_day") == int(callback_query_list[4]):
+            if week.get("week_number") == int(callback_query_list[3]) and week.get("week_day") == int(
+                    callback_query_list[4]):
                 update_user_dept(id_chat, int(callback_query_list[1]))
                 add_order(callback_query_list[2], name_user, date_today, callback_query_list[3], callback_query_list[4])
                 client.edit_message_text(id_chat, id_inline, MessageSend.order_accept)

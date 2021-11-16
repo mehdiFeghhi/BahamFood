@@ -112,6 +112,7 @@ def list_of_oder(list_of_order_of_person_in_day):
     msg = 'لیست افراد که سفارش دادند:'
     number = 0
     for person in list_of_order_of_person_in_day:
+        print(person)
         msg += "\n"
         msg += person.get("person_name")
         number += 1
