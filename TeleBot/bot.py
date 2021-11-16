@@ -254,14 +254,16 @@ def bot_do_job(bot: Client):
             week = find_week()
             number_of_week = week.get("week_number")
             week_of_today = week.get("week_day")
+            client.edit_message_text(id_chat, id_inline,
+                                     MessageSend.accept_this_food.format(food=callback_query_list[1]))
 
             for user in all_user:
                 client.send_message(user.get("user_id"), MessageSend.next_day_food,
                                     reply_markup=see_food(food, number_of_week, week_of_today))
-        elif callback_query_list[0] == 'Order_For_Next_Day_Accept' and type_user == "Admin":
+        elif callback_query_list[0] == 'Order_For_Next_Day_Accept':
             date_today = datetime.time
             week = find_week()
-            if week.get("week_number") == callback_query_list[3] and week.get("week_day") == callback_query_list[4]:
+            if week.get("week_number") == int(callback_query_list[3]) and week.get("week_day") == int(callback_query_list[4]):
                 update_user_dept(id_chat, int(callback_query_list[1]))
                 add_order(callback_query_list[2], name_user, date_today, callback_query_list[3], callback_query_list[4])
                 client.edit_message_text(id_chat, id_inline, MessageSend.order_accept)

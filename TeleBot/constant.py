@@ -35,6 +35,9 @@ class MessageSend:
     this_person_is_invalid = "این شخص در داده های ما نیست."
     give_how_much_money_get = "چه مبلغی پرداخت کرده است"
     update_your_dept = "حساب شما توسط آدمین آپدیت شد."
+    accept_this_food = "غذای فردا {food}"
+
+
 class Keyboards:
     my_dept = 'چقدر در سیستم بدهکار هستید.'
     see_list_of_buy_in_week = "لیست خرید های شما در یکی از هفته های دلخواه"
