@@ -42,7 +42,7 @@ def is_valid_name(name):
 def stop_day_order(client: Client, chat_id):
     week = find_week()
     time_of_this_day = datetime.datetime.now()
-    how_much_day_spend = (time_of_this_day - datetime.datetime.strptime(week.get("date"), '%Y-%m-%d %H:%M:%S')).days
+    how_much_day_spend = (time_of_this_day - datetime.datetime.strptime(week.get("date"), '%Y-%m-%d %H:%M:%S.%f')).days
     if how_much_day_spend == 0:
         how_much_day_spend = 1
 
