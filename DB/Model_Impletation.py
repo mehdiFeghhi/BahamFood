@@ -171,6 +171,9 @@ def update_week_number(week_number):
     newvalue = {"$set": {"week_number": week_number, "date": str(datetime.datetime.now())}}
     weeks.update_one(myquery, newvalue)
 
+def delete_week(i):
+    weeks = mydb["Week"]
+    weeks.delete_one({"i":i})
 
 def find_week():
     weeks = mydb["Week"]

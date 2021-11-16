@@ -1,0 +1,18 @@
+for use this python file
+we can use three function.
+
+add user : to add new user
+
+python de_helper.py add_user <chat_id> <name> <type>
+type : Admin or Normal
+name : must be unique
+
+file_name : all name can be
+
+python de_helper.py add_week <number_week> <number_day>
+number_week : Week we are in
+number_day : number of day in week
+
+python de_helper.py remove <name>
+
+

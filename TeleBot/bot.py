@@ -39,7 +39,7 @@ def is_valid_name(name):
     return re.match(r'^[a-zA-Z.-]+$', name)
 
 
-def stop_day_order(client : Client, chat_id):
+def stop_day_order(client: Client, chat_id):
     week = find_week()
     time_of_this_day = datetime.datetime.now()
     how_much_day_spend = (time_of_this_day - datetime.datetime.strptime(week.get("date"))).days
@@ -232,7 +232,7 @@ def bot_do_job(bot: Client):
                     update_user_dept(person_want_update.get("user_id"), int(message.text))
                     update_user_step(chat_id, "Start")
                     client.send_message(chat_id, MessageSend.update_person_successful_dept)
-                    client.send_message(person_want_update.get("user_id"),MessageSend.update_your_dept)
+                    client.send_message(person_want_update.get("user_id"), MessageSend.update_your_dept)
                 else:
 
                     print("No whrere :(")
