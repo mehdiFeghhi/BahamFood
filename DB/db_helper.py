@@ -47,7 +47,7 @@ def main():
             else:
                 print("your input is wrong for see our option enter -help")
         elif func_name == "add_week":
-            if len(inputs) == 2 and inputs[1].isnumeric() and inputs[0].isnumeric():
+            if len(inputs) == 3 and inputs[1].isnumeric() and inputs[0].isnumeric():
                 day_number = int(inputs[1])
                 week_number = int(inputs[0])
                 delete_week(1)
