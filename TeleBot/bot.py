@@ -238,7 +238,7 @@ def bot_do_job(bot: Client):
                 elif type_user == "Admin" and step_user == "Decrease_Dept2" and str(message.text).isnumeric():
 
                     person_want_update = find_user_by_name(step_user_list[1])
-                    update_user_dept(person_want_update.get("user_id"), int(message.text))
+                    update_user_dept(person_want_update.get("user_id"), -1 * int(message.text))
                     update_user_step(chat_id, "Start")
                     client.send_message(chat_id, MessageSend.update_person_successful_dept)
                     client.send_message(person_want_update.get("user_id"), MessageSend.update_your_dept)
