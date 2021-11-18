@@ -181,12 +181,18 @@ def find_week():
     weeks = mydb["Week"]
     return weeks.find_one({"i": 1})
 
+def update_food_week_day(food):
+    weeks = mydb["Week"]
+    # food_name = food.get("name")
+    # food_price = food.get("price")
+    myquery = {"i": 1}
+    newvalue = {"$set": {"food":food}}
+    weeks.update_one(myquery, newvalue)
 
 def write_flag_ready_food(flag_status):
     flags = mydb["Flags"]
     mydict = {"i": 1, "flag": flag_status}
     flags.insert_one(mydict)
-
 
 def read_flag_ready_food():
     flags = mydb["Flags"]
@@ -202,3 +208,4 @@ def update_flag_ready_food(flag_status):
     myquery = {"i": 1}
     newvalue = {"$set": {"flag": flag_status}}
     flags.update_one(myquery, newvalue)
+

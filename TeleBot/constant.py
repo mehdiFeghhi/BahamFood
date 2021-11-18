@@ -136,6 +136,7 @@ def see_all_person(list_of_person):
     msg = "لیست افراد :"
 
     for person in list_of_person:
-        msg += "\n"
-        msg += '/' + person.get("name")
+        if not person.get("name") == "":
+            msg += "\n"
+            msg += '/' + person.get("name")
     return msg

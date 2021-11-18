@@ -9,7 +9,7 @@ from TeleBot.constant import MessageSend, start_button_normal, start_button_admi
 from DB.Model_Impletation import find_user_by_id, add_new_user, update_user_step, update_user_name, \
     find_order_of_one_week_of_one_person, find_food_by_name, add_food, find_all_food, update_food_price, find_all_user, \
     update_user_dept, find_week, add_order, update_week_number, update_week_day, find_order_of_one_day_of_one_week_all, \
-    find_user_by_name, read_flag_ready_food, update_flag_ready_food
+    find_user_by_name, read_flag_ready_food, update_flag_ready_food, update_food_week_day
 
 is_food_today_run = read_flag_ready_food()
 
@@ -70,12 +70,21 @@ def stop_day_order(client: Client, chat_id):
 
 def step_two_start_for_not_exist(client: Client, chat_id, first_last_name, user_name,
                                  name_that_want_to_be_in_data_base):
+
+    global is_food_today_run
+
     name_validity = True if is_valid_name(name_that_want_to_be_in_data_base) else False
     status = update_user_name(chat_id, name_that_want_to_be_in_data_base)
     if name_validity and status.get('status') == 200:
         update_user_step(chat_id, 'Start')
         client.send_message(chat_id, MessageSend.Add_successfully)
         client.send_message(chat_id, MessageSend.start_message_normal, reply_markup=start_button_normal())
+
+        if is_food_today_run:
+            week = find_week()
+            client.send_message(chat_id, MessageSend.next_day_food,
+                                reply_markup=see_food(week.get("food"), week.get("week_number"), week.get("week_day")))
+
 
     elif not name_validity:
         client.send_message(chat_id, MessageSend.this_name_is_invalid)
@@ -237,7 +246,8 @@ def bot_do_job(bot: Client):
                         update_user_step(chat_id, "Decrease_Dept2@" + name_of_user)
                         client.send_message(chat_id, MessageSend.give_how_much_money_get)
 
-                elif type_user == "Admin" and step_user == "Decrease_Dept2" and str(message.text).isnumeric():
+                elif type_user == "Admin" and step_user == "Decrease_Dept2" and (str(message.text).isnumeric() or (
+                        str(message.text)[0] == '-' and str(message.text)[1:].isnumeric())):
 
                     person_want_update = find_user_by_name(step_user_list[1])
                     update_user_dept(person_want_update.get("user_id"), -1 * int(message.text))
@@ -267,6 +277,8 @@ def bot_do_job(bot: Client):
             week_of_today = week.get("week_day")
             client.edit_message_text(id_chat, id_inline,
                                      MessageSend.accept_this_food.format(food=callback_query_list[1]))
+
+            update_food_week_day(food)
 
             for user in all_user:
                 client.send_message(user.get("user_id"), MessageSend.next_day_food,
