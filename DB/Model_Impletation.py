@@ -28,7 +28,7 @@ def add_new_user(chat_id, name, step="Start", type_user="Normal", debt=0):
     user_by_name = find_user_by_name(name)
     user_by_id = find_user_by_id(chat_id)
 
-    if (user_by_name is None or len(user_by_name) == 0) and (user_by_id is None or len(user_by_id) == 0):
+    if ((user_by_name is None or user_by_name.get("name") == '') or len(user_by_name) == 0) and (user_by_id is None or len(user_by_id) == 0):
         users = mydb["User"]
         users.insert_one(mydict)
         print("user add ")

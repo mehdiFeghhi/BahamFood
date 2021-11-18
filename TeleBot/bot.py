@@ -47,11 +47,11 @@ def stop_day_order(client: Client, chat_id):
     week = find_week()
     time_of_this_day = datetime.datetime.now()
     how_much_day_spend = (time_of_this_day - datetime.datetime.strptime(week.get("date"), '%Y-%m-%d %H:%M:%S.%f')).days
-    print("how_much_day_spend "+str(how_much_day_spend))
+    print("how_much_day_spend " + str(how_much_day_spend))
     if how_much_day_spend == 0 and is_food_today_run:
         how_much_day_spend = 1
 
-    if int(week.get("week_day")) + how_much_day_spend > 7 :
+    if int(week.get("week_day")) + how_much_day_spend > 7:
 
         update_week_number(int(week.get("week_number")) + 1)
         update_week_day((int(week.get("week_day")) + how_much_day_spend) % 7 + 1)
@@ -59,13 +59,14 @@ def stop_day_order(client: Client, chat_id):
         update_week_day(int(week.get("week_day")) + how_much_day_spend)
 
     list_of_order_of_person_in_day = find_order_of_one_day_of_one_week_all(str(week.get("week_number")),
-                                                                               str(week.get("week_day")))
+                                                                           str(week.get("week_day")))
     print(week.get("week_number"))
     print(week.get("week_day"))
     msg = list_of_oder(list_of_order_of_person_in_day)
     client.send_message(chat_id, msg)
     is_food_today_run = False
     update_flag_ready_food(is_food_today_run)
+
 
 def step_two_start_for_not_exist(client: Client, chat_id, first_last_name, user_name,
                                  name_that_want_to_be_in_data_base):
