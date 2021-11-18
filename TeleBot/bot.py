@@ -79,7 +79,7 @@ def step_two_start_for_not_exist(client: Client, chat_id, first_last_name, user_
     elif not name_validity:
         client.send_message(chat_id, MessageSend.this_name_is_invalid)
 
-    elif not status.get('status') == 400:
+    elif status.get('status') == 400:
         client.send_message(chat_id, MessageSend.this_name_found)
 
 
