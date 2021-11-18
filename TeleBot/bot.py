@@ -9,9 +9,9 @@ from TeleBot.constant import MessageSend, start_button_normal, start_button_admi
 from DB.Model_Impletation import find_user_by_id, add_new_user, update_user_step, update_user_name, \
     find_order_of_one_week_of_one_person, find_food_by_name, add_food, find_all_food, update_food_price, find_all_user, \
     update_user_dept, find_week, add_order, update_week_number, update_week_day, find_order_of_one_day_of_one_week_all, \
-    find_user_by_name
+    find_user_by_name, read_flag_ready_food, update_flag_ready_food
 
-is_food_today_run = False
+is_food_today_run = read_flag_ready_food()
 
 
 def find_information_of_massage_sender(message: Message):
@@ -65,7 +65,7 @@ def stop_day_order(client: Client, chat_id):
     msg = list_of_oder(list_of_order_of_person_in_day)
     client.send_message(chat_id, msg)
     is_food_today_run = False
-
+    update_flag_ready_food(is_food_today_run)
 
 def step_two_start_for_not_exist(client: Client, chat_id, first_last_name, user_name,
                                  name_that_want_to_be_in_data_base):
@@ -171,6 +171,7 @@ def bot_do_job(bot: Client):
                     all_food_in_list_of_dic = find_all_food()
                     xb = see_food_menue_for_order(all_food_in_list_of_dic)
                     is_food_today_run = True
+                    update_flag_ready_food(is_food_today_run)
                     client.send_message(chat_id, MessageSend.add_name_of_your_food, reply_markup=xb)
 
                 elif type_user == "Admin" and message.text == Keyboards.see_who_one_wants_food:

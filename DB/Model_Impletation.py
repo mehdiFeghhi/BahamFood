@@ -77,13 +77,13 @@ def update_user_dept(chat_id, dept):
     newvalue = {"$set": {"dept": person["dept"] + dept}}
     users.update_one(myquery, newvalue)
 
+
 # def update_user_dept_by_name(name,dept):
 #     users = mydb["User"]
 #     myquery = {"name": name}
 #     person = find_user_by_id(myquery)
 #     newvalue = {"$set": {"dept": person["dept"] + dept}}
 #     users.update_one(myquery, newvalue)
-
 
 
 def find_food_by_name(name):
@@ -171,10 +171,34 @@ def update_week_number(week_number):
     newvalue = {"$set": {"week_number": week_number, "date": str(datetime.datetime.now())}}
     weeks.update_one(myquery, newvalue)
 
+
 def delete_week(i):
     weeks = mydb["Week"]
-    weeks.delete_one({"i":i})
+    weeks.delete_one({"i": i})
+
 
 def find_week():
     weeks = mydb["Week"]
     return weeks.find_one({"i": 1})
+
+
+def write_flag_ready_food(flag_status):
+    flags = mydb["Flags"]
+    mydict = {"i": 1, "flag": flag_status}
+    flags.insert_one(mydict)
+
+
+def read_flag_ready_food():
+    flags = mydb["Flags"]
+    find_flags = flags.find_one({"i": 1})
+    if find_flags is None:
+        return False
+    else:
+        return find_flags.get("flag")
+
+
+def update_flag_ready_food(flag_status):
+    flags = mydb["Flags"]
+    myquery = {"i": 1}
+    newvalue = {"$set": {"flag": flag_status}}
+    flags.update_one(myquery, newvalue)
